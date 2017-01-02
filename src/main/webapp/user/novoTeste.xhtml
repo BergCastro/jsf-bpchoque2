@@ -1,0 +1,110 @@
+<ui:composition template="/templates/template-principal.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui" xmlns:p="http://primefaces.org/ui">
+
+
+	<ui:define name="tituloJanela">Manutenção de Testes Físicos</ui:define>
+
+	<ui:define name="css">
+
+		<ui:include src="../resources/css/stylePassosTestes.xhtml" />
+
+	</ui:define>
+
+	<ui:define name="js">
+
+		<ui:include src="../resources/js/calendar_localeJS.xhtml" />
+
+	</ui:define>
+
+
+
+
+
+	<ui:define name="corpo-da-pagina">
+
+
+
+
+		<h:form id="form" prependId="false">
+
+			<p:growl id="msgs1" showDetail="true" />
+
+
+			<p:steps
+				activeIndex="#{testeFisicoController.testeFisico.status.valor}"
+				styleClass="custom" readonly="false" id="passos">
+				<p:menuitem value="Previsto" url="#" />
+				<p:menuitem value="Seleção de Participantes" url="#" />
+				<p:menuitem value="Em andamento" url="#" />
+				<p:menuitem value="Concluído" url="#" />
+
+			</p:steps>
+			<br />
+
+
+			<p:panelGrid columns="3" styleClass="ui-panelgrid-blank">
+				<p:outputLabel value="Data Inicial:" />
+				<p:calendar id="dataInicial"
+					value="#{testeFisicoController.testeFisico.dataInicial}"
+					pattern="dd/MM/yyyy" mask="true" converter="#{localDateConverter2}" locale="pt"/>
+
+				<p:message for="dataInicial" />
+				<p:outputLabel value="Data Final:" />
+				<p:calendar id="dataFinal"
+					value="#{testeFisicoController.testeFisico.dataFinal}"					
+					pattern="dd/MM/yyyy" mask="true" converter="#{localDateConverter2}" locale="pt"/>
+
+				<p:message for="dataFinal" />
+
+				<p:outputLabel value="Tipo:" />
+				<h:selectOneMenu value="#{testeFisicoController.testeFisico.tipo}"
+					id="tipo" converter="#{tipoTesteFisicoConverter}">
+					<f:selectItem itemLabel=".:Selecione uma opção:." />
+					<f:selectItems value="#{testeFisicoController.tipoTesteFisico}" />
+					<f:ajax render="tabelaResultados"></f:ajax>
+				</h:selectOneMenu>
+				<p:message for="tipo" />
+
+				<p:outputLabel value="Objetivo:" />
+				<p:inputText value="#{testeFisicoController.testeFisico.objetivo}"
+					size="50" id="objetivo"></p:inputText>
+				<p:message for="objetivo" />
+				<br />
+
+			</p:panelGrid>
+			<h:panelGroup id="botoes"
+				rendered="#{testeFisicoController.editando}">
+
+				<p:panelGrid columns="3" styleClass="ui-panelgrid-blank">
+					<b:commandButton action="#{testeFisicoController.cancelar()}"
+						value="Cancelar" immediate="true" look="primary">
+
+					</b:commandButton>
+					<b:commandButton action="#{testeFisicoController.salvar()}"
+						value="Salvar" look="primary">
+
+					</b:commandButton>
+
+
+
+					
+
+				</p:panelGrid>
+			</h:panelGroup>
+
+
+		</h:form>
+
+		
+	</ui:define>
+
+</ui:composition>
+
+
+
+
+

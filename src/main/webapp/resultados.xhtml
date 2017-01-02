@@ -1,0 +1,121 @@
+<ui:composition template="/templates/template-principal.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui" xmlns:p="http://primefaces.org/ui">
+
+
+	<ui:define name="tituloJanela">Manutenção de Testes Físicos</ui:define>
+
+	<ui:define name="css">
+
+		<ui:include src="../resources/css/stylePassosTestes.xhtml" />
+
+	</ui:define>
+
+	<ui:define name="js">
+		
+		<ui:include  src="../resources/js/calendar_localeJS.xhtml" />
+		
+	</ui:define>
+	
+	
+
+
+
+	<ui:define name="corpo-da-pagina">
+
+
+
+
+		
+
+			<p:growl id="msgs1" showDetail="true" />
+
+
+			<p:steps
+				activeIndex="#{testeFisicoController.testeFisico.status.valor}"
+				styleClass="custom" readonly="false" id="passos">
+				<p:menuitem value="Previsto" url="#" />
+				<p:menuitem value="Seleção de Participantes" url="#" />
+				<p:menuitem value="Em andamento" url="#" />
+				<p:menuitem value="Concluído" url="#" />
+
+			</p:steps>
+			<br />
+
+
+			<p:panelGrid columns="3" styleClass="ui-panelgrid-blank">
+				<p:outputLabel value="Data Inicial:" />
+				<p:inputMask id="dataInicial" converter="#{converterCalendar}"
+					value="#{testeFisicoController.testeFisico.dataInicial}"
+					mask="99/99/9999" />
+
+				<p:message for="dataInicial" />
+				<p:outputLabel value="Data Final:" />
+				<p:calendar id="dataFinal"
+					value="#{testeFisicoController.testeFisico.dataFinal}" mask="true"
+					locale="pt" converter="#{converterCalendar}" />
+
+				<p:message for="dataFinal" />
+
+				<p:outputLabel value="Tipo:" />
+				<h:selectOneMenu value="#{testeFisicoController.testeFisico.tipo}"
+					id="tipo" converter="#{tipoTesteFisicoConverter}">
+					<f:selectItem itemLabel=".:Selecione uma opção:." />
+					<f:selectItems value="#{testeFisicoController.tipoTesteFisico}" />
+					<f:ajax render="tabelaResultados"></f:ajax>
+				</h:selectOneMenu>
+				<p:message for="tipo" />
+
+				<p:outputLabel value="Objetivo:" />
+				<p:inputText value="#{testeFisicoController.testeFisico.objetivo}"
+					size="50" id="objetivo"></p:inputText>
+				<p:message for="objetivo" />
+				<br />
+		
+
+			</p:panelGrid>
+			<h:panelGroup id="pesquisa">
+				<h:panelGroup id="inclusao"
+					rendered="#{testeFisicoController.inclusao}">
+
+					<p:outputLabel value="Pesquisa de Participantes:" />
+					<p:autoComplete id="pessoa"
+						value="#{testeFisicoController.pessoaIncluir}"
+						completeMethod="#{testeFisicoController.pessoas}" var="p"
+						itemLabel="#{p.nome}" itemValue="#{p}"
+						converter="#{pessoaConverter3}" forceSelection="true">
+
+						<p:column>
+							<h:outputText value="#{p.id}" />
+						</p:column>
+						<p:column>
+							<h:outputText value="#{p.nome}" />
+						</p:column>
+
+					</p:autoComplete>
+
+					<p:commandButton value="Incluir"
+						action="#{testeFisicoController.incluir()}" update="pesquisa"
+						styleClass="ui-priority-primary" />
+
+					<br></br>
+				</h:panelGroup>
+				<br></br>
+				<p:messages id="msgs"></p:messages>
+				<h:panelGroup id="tabelaResultados">
+					
+
+							
+							
+					
+
+				</h:panelGroup>
+
+			</h:panelGroup>
+			
+			</ui:define>
+			
+	</ui:composition>

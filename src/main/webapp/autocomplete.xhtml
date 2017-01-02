@@ -1,0 +1,59 @@
+<ui:composition template="/templates/template-principal2.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="tituloJanela">Manutenção de Testes Físicos</ui:define>
+
+	<ui:define name="css">
+
+	</ui:define>
+
+	<ui:define name="js">
+
+	</ui:define>
+
+	<ui:define name="corpo-da-pagina">
+
+		<h:form>
+			<p:growl id="msgs" showDetail="true" />
+
+			<p:outputLabel value="Pesquisa de Participantes:" />
+			<p:autoComplete id="itemTip"
+				value="#{testeFisicoController.pessoaIncluir}"
+				completeMethod="#{testeFisicoController.pessoas}" var="p"
+				itemLabel="#{p.nome}" itemValue="#{p}" converter="#{pessoaConverter3}"
+				forceSelection="true" >
+				
+				<f:facet name="itemtip">
+					<h:panelGrid columns="2" cellpadding="5">
+						<f:facet name="header">
+							<h:outputText styleClass="ui-theme ui-theme-#{p.nome}"
+								style="margin-left:50px" />
+						</f:facet>
+
+						<h:outputText value="Display:" />
+						<h:outputText value="#{p.id}" />
+
+						<h:outputText value="Key" />
+						<h:outputText value="#{p.nome}" />
+					</h:panelGrid>
+				</f:facet>
+			</p:autoComplete>
+			
+			
+			
+			<p:commandButton action="#{testeFisicoController.incluir}"
+						value="Incluir" styleClass="ui-priority-primary">
+						
+						
+					</p:commandButton>
+
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>
+

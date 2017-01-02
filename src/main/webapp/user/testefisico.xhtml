@@ -1,0 +1,93 @@
+<ui:composition template="/templates/template-principal.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui" xmlns:p="http://primefaces.org/ui">
+	<ui:define name="tituloJanela">Manutenção de Testes Físicos</ui:define>
+
+	<ui:define name="css">
+
+	</ui:define>
+
+	<ui:define name="js">
+
+	</ui:define>
+
+	<ui:define name="corpo-da-pagina">
+		<script type="text/javascript"
+			src="../resources/js/calendar_locale.js">
+		</script>
+		
+
+		<h:form id="form1" prependId="false">
+			<h:panelGroup>
+
+				<b:commandButton action="#{testeFisicoController.novo()}"
+					value="Novo" look="primary" icon="glyphicon glyphicon-plus-sign">
+
+				</b:commandButton>
+				
+				<br />
+				<br />
+
+				<b:dataTable value="#{testeFisicoController.testesFisicos}" var="tf"
+					id="listaTestes" frame="box" rules="all" cellpadding="2" lang="es" style="font-size: 0.90em;">
+
+
+					<h:column>
+						<f:facet name="header">ID</f:facet>
+						<h:outputText value="#{tf.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">Data Inicial</f:facet>
+						<h:outputText value="#{tf.dataInicial}"
+							converter="#{localDateConverter2}"/>
+					</h:column>
+					<h:column>
+						<f:facet name="header">Data Final</f:facet>
+						<h:outputText value="#{tf.dataFinal}"
+							converter="#{localDateConverter2}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">Tipo de Teste</f:facet>
+						<h:outputText value="#{tf.tipo}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">Objetivo</f:facet>
+						<h:outputText value="#{tf.objetivo}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">Status</f:facet>
+						<h:outputText value="#{tf.status}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">Alterar</f:facet>
+						<h:commandLink value="Alterar"
+							action="#{testeFisicoController.alterar(tf)}">
+
+						</h:commandLink>
+					</h:column>
+					<h:column>
+						<f:facet name="header">Excluir</f:facet>
+						<h:commandLink value="Excluir"
+							action="#{testeFisicoController.excluir(tf)}"
+							onclick="if (!confirm('Confirme a exclusão da pessoa?')) return false">
+							<f:ajax execute="@form" render="@form" />
+						</h:commandLink>
+					</h:column>
+
+
+				</b:dataTable>
+
+			</h:panelGroup>
+
+
+
+		</h:form>
+
+
+	</ui:define>
+
+</ui:composition>
+

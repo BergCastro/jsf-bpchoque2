@@ -1,0 +1,245 @@
+<ui:composition template="/templates/template-principal.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui" xmlns:p="http://primefaces.org/ui">
+	<ui:define name="tituloJanela">Controle de Civís</ui:define>
+	<ui:define name="corpo-da-pagina">
+
+
+
+		<h:form id="form" prependId="false">
+			<h:panelGroup rendered="#{!civilController.editandoCivil}">
+
+				<b:commandButton action="#{civilController.novoCivil()}"
+					value="Novo" look="primary" icon="glyphicon glyphicon-plus-sign"
+					rendered="#{!civilController.editandoCivil}">
+					<f:ajax execute="@form" render="@form" />
+				</b:commandButton>
+				<br />
+				<br />
+
+				<b:dataTable value="#{civilController.civiles}" var="c"
+					id="lista" frame="box" rules="all" cellpadding="3" lang="es">
+
+
+					<h:column>
+						<f:facet name="header">ID</f:facet>
+						<h:outputText value="#{c.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">Identidade</f:facet>
+						<h:outputText value="#{c.identidade}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">CPF</f:facet>
+						<h:outputText value="#{c.cpf}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">Orgão</f:facet>
+						<h:outputText value="#{c.orgao}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">Nome</f:facet>
+						<h:outputText value="#{c.nome}" />
+					</h:column>
+					
+					<h:column>
+						<f:facet name="header">Alterar</f:facet>
+						<h:commandLink value="Alterar"
+							action="#{civilController.alterar(c)}">
+							<f:ajax render="@form" execute="@form" />
+						</h:commandLink>
+					</h:column>
+					<h:column>
+						<f:facet name="header">Excluir</f:facet>
+						<h:commandLink value="Excluir"
+							action="#{civilController.excluirCivil(c)}"
+							onclick="if (!confirm('Confirma a exclusão?')) return false">
+							<f:ajax execute="@form" render="@form" />
+						</h:commandLink>
+					</h:column>
+
+
+				</b:dataTable>
+
+			</h:panelGroup>
+
+			<p:tabView rendered="#{civilController.editandoCivil}">
+				<p:messages></p:messages>
+				<p:tab title="Dados Pessoais">
+					<p:panelGrid columns="3" styleClass="ui-panelgrid-blank">
+						<p:outputLabel value="Nome:" />
+						<p:inputText value="#{civilController.civil.nome}" id="nome"
+							size="60" style="text-transform: uppercase" converter="#{toUpperCaseConverter}" >
+							
+						</p:inputText>
+						
+						<p:message for="nome" />
+
+						<p:outputLabel value="CPF:" />
+						<p:inputMask value="#{civilController.civil.cpf}" id="cpf"
+							size="40" mask="999.999.999-99"  />
+						<p:message for="cpf" />
+						
+						<p:outputLabel value="Identidade:" />
+						<p:inputText value="#{civilController.civil.identidade}" id="identidade"
+							size="40" />
+						<p:message for="identidade" />
+
+						<p:outputLabel value="Data Nascimento:" />
+						<p:inputMask id="data"
+							value="#{civilController.civil.datanasc}" mask="99/99/9999"
+							converter="#{converterCalendar}" />
+
+						<p:message for="data" />
+
+						<p:outputLabel value="Estado Civil:" />
+						<h:selectOneMenu value="#{civilController.civil.estado_civil}"
+							id="estadoCivil">
+							<f:selectItem itemLabel=".:Selecione uma opção:." />
+							<f:selectItems value="#{civilController.estadoCivil}" />
+						</h:selectOneMenu>
+						<p:message for="estadoCivil" />
+
+						<p:outputLabel value="Sexo:" />
+						<h:panelGrid columns="2" style="margin-bottom:10px"
+							cellpadding="5" cellspacing="10">
+							<p:selectOneRadio id="sexo" columns="2"
+								value="#{civilController.civil.sexo}">
+								<f:selectItems value="#{civilController.sexos}" />
+							</p:selectOneRadio>
+						</h:panelGrid>
+						<p:message for="sexo" />
+						
+						<p:outputLabel value="Orgão:" />
+						<p:inputText value="#{civilController.civil.orgao}" id="orgao"
+							size="30" style="text-transform: uppercase" converter="#{toUpperCaseConverter}" >
+							
+						</p:inputText>
+						<p:message for="orgao" />
+
+						<p:outputLabel value="Foto:" />
+						<p:fileUpload value="#{civilController.civil.foto}"
+							fileUploadListener="#{pessoaController.carregarArquivo}"
+							mode="advanced" dragDropSupport="false" update="imagem"
+							sizeLimit="100000" fileLimit="1"
+							allowTypes="/(\.|\/)(gif|jpe?g|png)$/" id="foto">
+
+						</p:fileUpload>
+
+						<p:growl id="messages" showDetail="true" />
+						<h:panelGroup id="imagem">
+							<p:graphicImage value="#{civilController.civil.foto}" />
+						</h:panelGroup>
+
+					</p:panelGrid>
+				</p:tab>
+								
+				
+				<p:tab title="Endereço">
+
+
+
+					<p:panelGrid columns="3" styleClass="ui-panelgrid-blank">
+
+						<p:outputLabel value="Logradouro:" />
+						<p:inputText value="#{civilController.civil.logradouro}"
+							id="logradouro" size="40" style="text-transform: uppercase" converter="#{toUpperCaseConverter}"/>
+						<p:message for="logradouro" />
+
+						<p:outputLabel value="Número:" />
+						<p:inputText value="#{civilController.civil.numero}"
+							id="numero" size="20" />
+						<p:message for="numero" />
+
+						<p:outputLabel value="Complemento:" />
+						<p:inputText value="#{civilController.civil.complemento}"
+							id="complemento" size="40" style="text-transform: uppercase" converter="#{toUpperCaseConverter}"/>
+						<p:message for="complemento" />
+
+						<p:outputLabel value="Estado:" />
+						<p:selectOneMenu id="estado" value="#{cidadeController.estado}"
+						converter="#{estadoConverter}">
+							<p:ajax event="change" process="@this" update="cidade"
+								 />
+							<f:selectItem itemLabel=".:Selecione:." itemValue="" noSelectionOption="true"/>
+							<f:selectItems value="#{estadoController.estados}" var="e"
+								itemLabel="#{e.nome}" itemValue="#{e}" />
+						</p:selectOneMenu>
+						<p:message for="estado" />
+
+
+						<p:outputLabel value="Cidade:" for="cidade" />
+						<p:selectOneMenu id="cidade" value="#{bairroController.cidade}"
+						converter="#{cidadeConverter}">
+						<p:ajax event="change" process="@this" update="bairro" />
+							<f:selectItem itemLabel=".:Selecione:." />
+							<f:selectItems value="#{cidadeController.cidadesByEstado}" var="c"
+								itemLabel="#{c.nome}" itemValue="#{c}" />
+						</p:selectOneMenu>
+						<p:message for="cidade" /> 
+						
+						
+						<p:outputLabel value="Bairro:" for="bairro" />
+						<p:selectOneMenu id="bairro" value="#{civilController.civil.bairro}"
+						converter="#{bairroConverter}">
+							<f:selectItem itemLabel=".:Selecione:." itemValue=""
+									noSelectionOption="true" />
+							<f:selectItems value="#{bairroController.bairrosByCidade}" var="b"
+								itemLabel="#{b.nome}" itemValue="#{b}" />
+						</p:selectOneMenu>
+						<p:message for="bairro" /> 
+						
+						<p:outputLabel value="CEP:" />
+						<p:inputMask id="cep"
+							value="#{civilController.civil.cep}" mask="99999-999"
+							 />
+
+						<p:message for="cep" />
+						
+						
+					</p:panelGrid>
+				</p:tab>
+				<p:tab title="Contato">
+					<p:panelGrid columns="3" styleClass="ui-panelgrid-blank">
+						<p:outputLabel value="Email:" />
+						<p:inputText value="#{civilController.civil.email}" id="email"
+							size="60" style="text-transform: lowercase" converter="#{toLowerCaseConverter}"/>
+						<p:message for="email" />
+						<p:outputLabel value="Celular1:" />
+						<p:inputMask value="#{civilController.civil.telefone1}" id="celular1"
+							size="25" mask="(99)99999-9999" />
+						<p:message for="celular1" />
+						<p:outputLabel value="Celular2:" />
+						<p:inputMask value="#{civilController.civil.telefone2}" id="celular2"
+							size="25" mask="(99)*9999-9999" />
+						<p:message for="celular2" />
+											
+					</p:panelGrid>
+						
+					
+				</p:tab>
+				
+			</p:tabView>
+			<h:panelGroup rendered="#{civilController.editandoCivil}">
+				<p:panelGrid columns="3" styleClass="ui-panelgrid-blank">
+					<b:commandButton action="#{civilController.cancelar()}"
+						value="Cancelar" immediate="true" look="primary">
+						<f:ajax execute="@form" render="@form" />
+					</b:commandButton>
+
+					<b:commandButton action="#{civilController.salvar()}"
+						value="Salvar" look="primary">
+						<f:ajax execute="@form" render="@form" />
+					</b:commandButton>
+
+				</p:panelGrid>
+			</h:panelGroup>
+
+
+		</h:form>
+	</ui:define>
+</ui:composition>
+

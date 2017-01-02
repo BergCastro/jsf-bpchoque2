@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:b="http://bootsfaces.net/ui"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title><ui:insert name="tituloJanela" /></title>
+	<ui:insert name="css"></ui:insert>
+	
+</h:head>
+
+<h:body style="padding: 60px;">
+	<b:navBar brand="Sistema Integrado BPCHOQUE" brandHref="#" fixed="top"
+		inverse="true">
+		<b:navbarLinks>
+			<b:navLink value="Início" href="#"></b:navLink>
+			<b:dropMenu value="Manutenção">
+				<b:navLink value="Patentes" href="../patentes.xhtml"></b:navLink>
+				<b:navLink value="Pessoas" href="../pessoas.xhtml"></b:navLink>
+				<b:navLink value="Teste Físico" href="../testefisico.xhtml"></b:navLink>
+
+			</b:dropMenu>
+			<b:navLink value="Relatórios" href="#contact"></b:navLink>
+		</b:navbarLinks>
+	</b:navBar>
+
+
+	<b:container>
+		<b:jumbotron>
+			<ui:insert name="corpo-da-pagina"> Espaço para o conteúdo da tela </ui:insert>
+		</b:jumbotron>
+	</b:container>
+	
+	
+	
+</h:body>
+</html>

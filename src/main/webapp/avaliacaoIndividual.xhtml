@@ -1,0 +1,204 @@
+<ui:composition template="/templates/template-principal2.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui" xmlns:p="http://primefaces.org/ui">
+	<ui:define name="tituloJanela">Avaliação Individual</ui:define>
+	<ui:define name="corpo-da-pagina">
+		<h:form id="form">
+
+			<b:commandButton action="#{avaliacaoIndividualController.novo()}" value="Novo"
+				look="primary" icon="glyphicon glyphicon-plus-sign"
+				rendered="#{!avaliacaoIndividualController.editando}">
+				<f:ajax execute="@form" render="@form" />
+			</b:commandButton>
+			<br />
+			<br />
+			<h:panelGroup rendered="#{!avaliacaoIndividualController.editando}">
+				<b:dataTable value="#{avaliacaoIndividualController.avaliacoes}" var="obj"
+					id="lista" frame="box" rules="all" cellpadding="3" lang="es" style="font-size: 0.90em;">
+
+
+					<h:column>
+						<f:facet name="header">ID</f:facet>
+						<h:outputText value="#{obj.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">Data</f:facet>
+						<h:outputText value="#{obj.dataAvaliacao}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">NOME</f:facet>
+						<h:outputText value="#{obj.pessoa.nome}" />
+					</h:column>
+					
+					<h:column>
+						<f:facet name="header">Alterar</f:facet>
+						<h:commandLink value="Alterar"
+							action="#{avaliacaoIndividualController.alterar(obj)}">
+							<f:ajax render="@form" execute="@form" />
+						</h:commandLink>
+					</h:column>
+					<h:column>
+						<f:facet name="header">Excluir</f:facet>
+						<h:commandLink value="Excluir"
+							action="#{avaliacaoIndividualController.excluir(obj)}"
+							onclick="if (!confirm('Confirme a exclusão da pessoa?')) return false">
+							<f:ajax execute="@form" render="@form" />
+						</h:commandLink>
+					</h:column>
+
+
+				</b:dataTable>
+
+			</h:panelGroup>
+			<p:tabView rendered="#{avaliacaoIndividualController.editando}">
+				<p:messages></p:messages>
+				<p:tab title="Dados Pessoais">
+					<p:panelGrid columns="3" styleClass="ui-panelgrid-blank">
+						<p:outputLabel value="Nome:" />
+						<p:outputLabel value="#{avaliacaoIndividualController.avaliacao.pessoa.nome}" />
+													
+						<br />
+								
+
+						<p:outputLabel value="CPF:" />
+						<p:outputLabel value="#{avaliacaoIndividualController.avaliacao.pessoa.cpf}" />
+						<br />
+
+						<p:outputLabel value="Data Nascimento:" />
+						<p:outputLabel value="#{avaliacaoIndividualController.avaliacao.pessoa.datanasc}" />
+
+						<br />
+
+						
+
+						<p:outputLabel value="Sexo:" />
+						<p:outputLabel value="#{avaliacaoIndividualController.avaliacao.pessoa.sexo}" />
+						<br />
+	
+
+					</p:panelGrid>
+				</p:tab>
+		
+				<p:tab title="Atividade Física">
+					
+
+
+					<p:panelGrid columns="3" styleClass="ui-panelgrid-blank">
+						
+						<p:outputLabel value="Pratica algum tipo de de Atividade Física? " />
+						<h:panelGrid columns="2" style="margin-bottom:10px"
+							cellpadding="5" cellspacing="10">
+							<p:selectOneRadio id="atividade" columns="2"
+								value="#{avaliacaoIndividualController.avaliacao.praticaTipoAtividade}">
+								
+								<f:selectItem itemLabel="Sim" itemValue="true" />
+								<f:selectItem itemLabel="Não" itemValue="false"/>
+							</p:selectOneRadio>
+						</h:panelGrid>
+						<p:message for="atividade" />
+						
+						<p:outputLabel value="Qual?" />
+						<p:inputText value="#{avaliacaoIndividualController.avaliacao.praticaTipoAtividadeQual}"
+							id="atividadeQual" size="50" style="text-transform: uppercase" converter="#{toUpperCaseConverter}"/>
+						<p:message for="atividadeQual" />
+						
+						
+						
+						
+						<p:outputLabel value="Qual a Frequência?" />
+						<p:selectOneMenu id="frequencia" value="#{avaliacaoIndividualController.avaliacao.frequencia}">
+							<f:selectItem itemLabel=".:Selecione:." />
+							<f:selectItems value="#{avaliacaoIndividualController.frequencia}"  />
+						</p:selectOneMenu>
+						<p:message for="frequencia" />
+
+						<p:outputLabel value="Qual a Duração?" />
+						<p:selectOneMenu id="duracao" value="#{avaliacaoIndividualController.avaliacao.duracao}">
+							<f:selectItem itemLabel=".:Selecione:." />
+							<f:selectItems value="#{avaliacaoIndividualController.duracao}"  />
+						</p:selectOneMenu>
+						<p:message for="duracao" />
+						
+						<p:outputLabel value="Qual o Objetivo?" />
+						<p:selectOneMenu id="objetivo" value="#{avaliacaoIndividualController.avaliacao.objetivo}">
+							<f:selectItem itemLabel=".:Selecione:." />
+							<f:selectItems value="#{avaliacaoIndividualController.objetivo}"  />
+						</p:selectOneMenu>
+						<p:message for="objetivo" />
+						
+						<p:outputLabel value="Possui alguma restrição? " />
+						<h:panelGrid columns="2" style="margin-bottom:10px"
+							cellpadding="5" cellspacing="10">
+							<p:selectOneRadio id="restricao" columns="2"
+								value="#{avaliacaoIndividualController.avaliacao.restricao}">
+								
+								<f:selectItem itemLabel="Sim" itemValue="true"/>
+								<f:selectItem itemLabel="Não" itemValue="false"/>
+							</p:selectOneRadio>
+						</h:panelGrid>
+						<p:message for="restricao" />
+						
+						
+						<p:outputLabel value="Qual?" />
+						<p:inputText value="#{avaliacaoIndividualController.avaliacao.restricaoQual}"
+							id="restricaoQual" size="50" style="text-transform: uppercase" converter="#{toUpperCaseConverter}"/>
+						<p:message for="restricaoQual" />
+						
+						
+					</p:panelGrid>
+				</p:tab>
+				<p:tab title="Comportamento e Histórico Médico">
+					<p:panelGrid columns="3" styleClass="ui-panelgrid-blank">
+						<p:outputLabel value="Você fuma? " />
+						<h:panelGrid columns="2" style="margin-bottom:10px"
+							cellpadding="5" cellspacing="10">
+							<p:selectOneRadio id="fuma" columns="2"
+								value="#{avaliacaoIndividualController.avaliacao.fuma}">
+								
+								<f:selectItem itemLabel="Sim" itemValue="1"/>
+								<f:selectItem itemLabel="Não" itemValue="0"/>
+							</p:selectOneRadio>
+						</h:panelGrid>
+						<p:message for="fuma" />
+						
+						<p:outputLabel value="Faz uso de bebidas alcoólicas? " />
+						<h:panelGrid columns="2" style="margin-bottom:10px"
+							cellpadding="5" cellspacing="10">
+							<p:selectOneRadio id="bebida" columns="2"
+								value="#{avaliacaoIndividualController.avaliacao.bebidaAlcoolica}">
+								
+								<f:selectItem itemLabel="Sim" itemValue="1"/>
+								<f:selectItem itemLabel="Não" itemValue="0"/>
+							</p:selectOneRadio>
+						</h:panelGrid>
+						<p:message for="bebida" />
+						
+						<p:outputLabel value="Faz uso de algum medicamento? " />
+						<h:panelGrid columns="2" style="margin-bottom:10px"
+							cellpadding="5" cellspacing="10">
+							<p:selectOneRadio id="medicamento" columns="2"
+								value="#{avaliacaoIndividualController.avaliacao.medicamento}">
+								<f:selectItem itemLabel="Sim" itemValue="1"/>
+								<f:selectItem itemLabel="Não" itemValue="0"/>
+							</p:selectOneRadio>
+						</h:panelGrid>
+						<p:message for="medicamento" />
+						
+						<p:outputLabel value="Qual?" />
+						<p:inputText value="#{avaliacaoIndividualController.avaliacao.medicamento}"
+							id="medicamentoQual" size="50" style="text-transform: uppercase" converter="#{toUpperCaseConverter}"/>
+						<p:message for="medicamentoQual" />
+											
+					</p:panelGrid>
+						
+					
+				</p:tab>
+				
+			</p:tabView>
+		</h:form>
+	</ui:define>
+</ui:composition>
+

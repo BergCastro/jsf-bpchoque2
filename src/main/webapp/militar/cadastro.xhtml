@@ -1,0 +1,80 @@
+<ui:composition template="../templates/template-principal.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui" 
+	xmlns:p="http://primefaces.org/ui">
+	<link href="/css/cadastro.css" rel="stylesheet" type="text/css" />
+	<ui:define name="corpo-da-pagina">
+		<h3>Cadastro de Militar</h3>
+		<br />
+		<br />
+		<h:form id="cadastro">
+			<h:messages />
+			<b:panelGrid colSpans="3,9" size="xs">
+				<h:outputLabel value="Matrícula: " />
+				<b:inputText value="#{militarController.militar.matricula}" span="4" />
+				<h:outputLabel value="Número: " />
+				<b:inputText value="#{militarController.militar.numero_pm}" span="4" />
+				<h:outputLabel value="Patente: " />
+				<b:selectOneMenu value="#{militarController.militar.patente}"
+					span="6">
+					<f:selectItem itemValue="" itemLabel="Não Informado" />
+					<f:selectItems value="#{militarController.patentes}" var="p"
+						itemLabel="#{p.nome}" itemValue="#{p}" />
+				</b:selectOneMenu>
+				<h:outputLabel value="Nome de Guerra: " />
+				<b:inputText value="#{militarController.militar.nome_guerra}"
+					span="6" />
+				<h:outputLabel value="Pertence ao Batalhão:" />
+				<b:selectOneMenu value="#{militarController.militar.interno}"
+					span="6">
+					<f:selectItem itemValue="" itemLabel="Não Informado" />
+					<f:selectItem itemValue="true" itemLabel="Sim" />
+					<f:selectItem itemValue="false" itemLabel="Não" />
+				</b:selectOneMenu>
+				<h:outputLabel value="Companhia:" />
+				<b:selectOneMenu value="#{militarController.militar.cia}" 
+				 span="6" >
+					<f:selectItem itemValue="" itemLabel="Não Informado" />
+					<f:selectItems value="#{companhiaController.companhias}" var="c"
+						itemLabel="#{c.cia}" itemValue="#{c}" >
+						
+					</f:selectItems>
+						<f:ajax listener="#{grupoControler.listener}" render="smGrupo"></f:ajax>
+				</b:selectOneMenu>
+				<h:outputLabel value="OPM:" />
+				<b:inputText value="#{militarController.militar.opm}" span="6" disabled="true"/>
+				<h:outputLabel value="Grupo:" />
+				<b:selectOneMenu value="#{militarController.militar.cia}" span="6" id="smGrupo">
+					<f:selectItem itemValue="" itemLabel="Não Informado" />
+					<f:selectItems value="#{grupoController.findByCompanhia(grupoController.ciaAtual)}" var="g"
+						itemLabel="#{g.grupo}" itemValue="#{g}" />
+				</b:selectOneMenu>
+				
+
+			</b:panelGrid>
+		</h:form>
+
+		<h:form>
+
+			<b:dataTable value="#{militaresController.militares}" var="m"
+				id="tbMilitares" border="1" lang="es">
+				<h:column value="#{m.id}"></h:column>
+				<h:column value="#{m.nome_guerra}"></h:column>
+				<h:column value="#{m.patente}"></h:column>
+
+
+				<h:column>
+					<h:commandButton value="Excluir"
+						action="#{militarController.excluir(m)}">
+
+					</h:commandButton>
+				</h:column>
+
+			</b:dataTable>
+
+		</h:form>
+	</ui:define>
+</ui:composition>

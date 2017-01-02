@@ -1,0 +1,750 @@
+<ui:composition template="/templates/template-principal2.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui" xmlns:p="http://primefaces.org/ui">
+	<ui:define name="tituloJanela">Manutenção de Testes Físicos</ui:define>
+
+	<ui:define name="css">
+		<link rel="stylesheet" type="text/css" href="../resources/css/styleStep.css"/>
+		<!-- <ui:include src="../resources/css/stylePassosTestes.xhtml" /> -->
+
+	</ui:define>
+
+	
+
+
+	<ui:define name="corpo-da-pagina">
+
+		<h:form id="form" prependId="false">
+
+			<p:growl id="msgs2" showDetail="true" />
+
+
+			<p:steps
+				activeIndex="#{testeFisicoController.testeFisico.status.valor}"
+				styleClass="custom" readonly="false" id="passos">
+				<p:menuitem value="Previsto" url="#" />
+				<p:menuitem value="Seleção de Participantes" url="#" />
+				<p:menuitem value="Em andamento" url="#" />
+				<p:menuitem value="Concluído" url="#" />
+
+			</p:steps>
+			<br />
+
+
+			<p:panelGrid columns="3" styleClass="ui-panelgrid-blank">
+				<p:outputLabel value="Data  Inicial:" />
+				<p:calendar id="dataInicial"
+					value="#{testeFisicoController.testeFisico.dataInicial}"
+					pattern="dd/MM/yyyy" mask="true" converter="#{localDateConverter2}"
+					locale="pt" />
+
+				<p:message for="dataInicial" />
+				<p:outputLabel value="Data Final:" />
+				<p:calendar id="dataFinal" label="Data Final:"
+					value="#{testeFisicoController.testeFisico.dataFinal}"
+					pattern="dd/MM/yyyy" mask="true" converter="#{localDateConverter2}"
+					locale="pt" />
+
+				<p:message for="dataFinal" />
+
+				<p:outputLabel value="Tipo:" />
+				<h:selectOneMenu value="#{testeFisicoController.testeFisico.tipo}"
+					id="tipo" converter="#{tipoTesteFisicoConverter}">
+					<f:selectItem itemLabel=".:Selecione uma opção:." />
+					<f:selectItems value="#{testeFisicoController.tipoTesteFisico}" />
+					<f:ajax render="tabelaResultados"></f:ajax>
+				</h:selectOneMenu>
+				<p:message for="tipo" />
+
+				<p:outputLabel value="Objetivo:" />
+				<p:inputText value="#{testeFisicoController.testeFisico.objetivo}"
+					size="50" id="objetivo"></p:inputText>
+				<p:message for="objetivo" />
+				<br />
+
+
+
+			</p:panelGrid>
+
+			<h:panelGroup id="inclusao"
+				rendered="#{testeFisicoController.inclusao}">
+				<p:panelGrid columns="7" styleClass="ui-panelgrid-blank">
+					<p:outputLabel value="Pesquisa de Matrícula:" />
+					<p:autoComplete id="pessoa"
+						value="#{testeFisicoController.pessoaIncluir}"
+						completeMethod="#{testeFisicoController.pessoas}" var="p"
+						itemLabel="#{p.nome}" itemValue="#{p}"
+						converter="#{pessoaConverter3}" forceSelection="true"
+						maxlength="40" scrollHeight="180">
+
+						<p:column>
+							<h:outputText value="#{p.matricula}" />
+						</p:column>
+						<p:column>
+							<h:outputText value="#{p.cargo.abreviacao}" />
+						</p:column>
+						<p:column>
+							<h:outputText value="#{p.nome_guerra}" />
+						</p:column>
+
+					</p:autoComplete>
+
+					<p:commandButton value="Incluir"
+						action="#{testeFisicoController.incluir()}"
+						update="listaInclusao, pessoa, tabelaResultados"
+						styleClass="ui-priority-primary" />
+					
+					
+
+					<p:commandButton value="Adicionar Pessoa" type="button"
+						icon="fa fa-user-plus" onclick="PF('dlg2').show();"
+						action="#{pessoaController.novoPessoa()}" />
+
+					<p:dialog header="Cadastro de Pessoa" widgetVar="dlg2" modal="true"
+						height="400" width="700">
+							<h:form id="form4">
+             
+					    <p:growl id="msgs" showDetail="true" />
+					 
+					    <h3 style="margin-top:0">Basic</h3>
+					    <p:tabView>
+					        <p:tab title="Godfather Part I">
+					            <h:panelGrid columns="2" cellpadding="10">
+					                <p:graphicImage name="demo/images/godfather/godfather1.jpg" />
+					                <h:outputText
+					                    value="The story begins as Don Vito Corleone..." />
+					            </h:panelGrid>
+					        </p:tab>
+					        <p:tab title="Godfather Part II">
+					            <h:panelGrid columns="2" cellpadding="10">
+					                <p:graphicImage name="demo/images/godfather/godfather2.jpg" />
+					                <h:outputText value="Francis Ford Coppola's legendary..." />
+					            </h:panelGrid>
+					        </p:tab>
+					        <p:tab title="Godfather Part III">
+					            <h:panelGrid columns="2" cellpadding="10">
+					                <p:graphicImage name="demo/images/godfather/godfather3.jpg" />
+					                <h:outputText value="After a break of more than 15 years..." />
+					            </h:panelGrid>
+					        </p:tab>
+					    </p:tabView>
+					    </h:form>
+					</p:dialog>
+					<br />
+
+				</p:panelGrid>
+
+			</h:panelGroup>
+			<h:panelGroup id="listaInclusao"
+				rendered="#{testeFisicoController.selecao}">
+				<p:dataTable id="lista" var="rt"
+					value="#{testeFisicoController.resultadosTaf}" editMode="cell"
+					widgetVar="cellCars" paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="5,10,15">
+
+
+
+					<p:column headerText="Participante" colspan="3">
+
+
+						<h:outputText
+							value="#{testeFisicoController.participante(rt.pessoa)}" />
+
+
+					</p:column>
+
+
+					<p:column style="text-align: center;">
+						<f:facet name="header">Excluir</f:facet>
+						<p:commandLink value="Excluir"
+							action="#{testeFisicoController.excluirResultadoTaf(rt)}"
+							onclick="if (!confirm('Confirme a exclusão do resultado?')) return false"
+							update="lista">
+
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+
+
+			</h:panelGroup>
+			<br></br>
+			<p:messages id="msgs"></p:messages>
+			<h:panelGroup id="tabelaResultados"
+				rendered="#{testeFisicoController.andamento}">
+				<p:tabView>
+
+					<p:tab title="TAF Geral">
+						<h:commandLink value="Gerar Relatório - ">
+							<f:setPropertyActionListener
+								target="#{testeFisicoController.tipoRelatorio}" value="1" />
+							<p:fileDownload
+								value="#{testeFisicoController.imprimirResultadoTaf()}" />
+							<h:graphicImage library="imagens" name="pdf.png" width="24"
+								height="24" title="Imprimir PDF" />
+						</h:commandLink>
+
+						<p:dataTable id="lista" var="rt"
+							value="#{testeFisicoController.resultadosTaf}" editable="true"
+							editMode="cell" widgetVar="taf" paginator="true"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="5,10,15" style="font-size: 0.92em;"
+							rows="10" lazy="true">
+
+
+							<f:facet name="header">
+
+							</f:facet>
+
+
+
+							<p:column headerText="Participante" colspan="7">
+
+
+								<h:outputText
+									value="#{testeFisicoController.participante(rt.pessoa)}" />
+
+
+							</p:column>
+
+							<p:column headerText="Flexão Barra" style="text-align: center;">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{rt.flexao_barra}" id="outputbarra" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText value="#{testeFisicoController.barra}"
+											style="width:96%" label="Year"
+											rendered="#{testeFisicoController.enableBarra(rt.pessoa)}">
+											<p:ajax event="blur"
+												listener="#{testeFisicoController.salvarBarra(rt)}"
+												update="outputbarra, totalpts"></p:ajax>
+
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+
+							<p:column headerText="Flexão Solo" style="text-align: center;">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{rt.flexao_solo}" id="outputapoio" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText value="#{testeFisicoController.apoio}"
+											style="width:96%" label="Year">
+											<p:ajax event="blur"
+												listener="#{testeFisicoController.salvarApoio(rt)}"
+												update="outputapoio, totalpts"></p:ajax>
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+							<p:column headerText="Abdom." style="text-align: center;">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{rt.abdominal}" id="outputAbdominal" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText value="#{testeFisicoController.abdominal}"
+											style="width:96%" label="Year">
+											<p:ajax event="blur"
+												listener="#{testeFisicoController.salvarAbdominal(rt)}"
+												update="outputAbdominal, totalpts"></p:ajax>
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column headerText="Corrida 50m" style="text-align: center;">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{rt.corrida_50m}" id="outputCorrida50" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText value="#{testeFisicoController.corrida50}"
+											style="width:96%" label="Year">
+											<p:ajax event="blur"
+												listener="#{testeFisicoController.salvarCorrida50(rt)}"
+												update="outputCorrida50, totalpts"></p:ajax>
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column headerText="Corrida 12min" style="text-align: center;">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{rt.corrida_12min}" id="outputCorrida12" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText value="#{testeFisicoController.corrida12}"
+											style="width:96%" label="Year">
+											<p:ajax event="blur"
+												listener="#{testeFisicoController.salvarCorrida12(rt)}"
+												update="outputCorrida12, totalpts"></p:ajax>
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column headerText="Total" style="text-align: center;">
+
+								<h:outputText value="#{rt.pontuacao_total}" id="totalpts" />
+
+							</p:column>
+							<p:column style="text-align: center;">
+								<f:facet name="header">Excluir</f:facet>
+
+
+								<p:commandLink value="Excluir"
+									action="#{testeFisicoController.excluirResultadoTaf(rt)}"
+									update="tabelaResultados" styleClass="ui-priority-primary"
+									onclick="if (!confirm('Confirme a exclusão do resultado?')) return false" />
+							</p:column>
+
+						</p:dataTable>
+						<!-- <p:contextMenu for="lista" widgetVar="cMenu">
+							<p:menuitem value="Edit Cell" icon="ui-icon-search"
+								onclick="PF('taf').showCellEditor();return false;" />
+							<p:menuitem value="Hide Menu" icon="ui-icon-close"
+								onclick="PF('cMenu').hide()" />
+						</p:contextMenu> -->
+
+					</p:tab>
+
+					<p:tab title="THE CDC"
+						rendered="#{testeFisicoController.getThecdc()}">
+						<h:commandLink value="Gerar Relatório - ">
+							<f:setPropertyActionListener
+								target="#{testeFisicoController.tipoRelatorio}" value="1" />
+							<p:fileDownload
+								value="#{testeFisicoController.imprimirResultadoTheCdc()}" />
+							<h:graphicImage library="imagens" name="pdf.png" width="24"
+								height="24" title="Imprimir PDF" />
+						</h:commandLink>
+
+						<p:dataTable id="listaTheCdc" var="rt"
+							value="#{testeFisicoController.resultadosTheCdc}" editable="true"
+							editMode="cell" widgetVar="thecdc" paginator="true"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="5,10,15" style="font-size: 0.92em;"
+							rows="10" lazy="true">
+
+
+
+
+
+
+							<p:column headerText="Participante" colspan="5">
+
+
+								<h:outputText
+									value="#{testeFisicoController.participante(rt.pessoa)}" />
+
+
+							</p:column>
+
+
+							<p:column headerText="Corrida 5km" style="text-align: center;">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{rt.corrida_5km}" id="outputCorrida5km" />
+									</f:facet>
+									<f:facet name="input">
+										<h:selectOneMenu value="#{testeFisicoController.corrida5km}"
+											style="width:100%;    color: black;">
+											<f:selectItem itemLabel="" />
+											<f:selectItems value="#{testeFisicoController.situacaoCdc}" />
+											<p:ajax event="blur"
+												listener="#{testeFisicoController.salvarCorrida5km(rt)}"
+												update="outputCorrida5km"></p:ajax>
+										</h:selectOneMenu>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column headerText="Granada" style="text-align: center;">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{rt.granada}" id="outputGranada" />
+									</f:facet>
+									<f:facet name="input">
+										<h:selectOneMenu value="#{testeFisicoController.granada}"
+											style="width:100%; color: black;">
+											<f:selectItem itemLabel="" />
+											<f:selectItems value="#{testeFisicoController.situacaoCdc}" />
+											<p:ajax event="blur"
+												listener="#{testeFisicoController.salvarGranada(rt)}"
+												update="outputGranada"></p:ajax>
+										</h:selectOneMenu>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+							<p:column headerText="Natação 50m" style="text-align: center;">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{rt.natacao_50m}" id="outputNatacao50m" />
+									</f:facet>
+									<f:facet name="input">
+										<h:selectOneMenu value="#{testeFisicoController.natacao50m}"
+											style="width:100%; color: black;">
+											<f:selectItem itemLabel="" />
+											<f:selectItems value="#{testeFisicoController.situacaoCdc}" />
+											<p:ajax event="blur"
+												listener="#{testeFisicoController.salvarNatacao50(rt)}"
+												update="outputNatacao50m"></p:ajax>
+										</h:selectOneMenu>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+							<p:column headerText="Flutuação" style="text-align: center;">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{rt.flutuacao}" id="outputFlutuacao" />
+									</f:facet>
+									<f:facet name="input">
+										<h:selectOneMenu
+											value="#{testeFisicoController.flutuacao_cdc}"
+											style="width:100%; color: black;">
+											<f:selectItem itemLabel="" />
+											<f:selectItems value="#{testeFisicoController.situacaoCdc}" />
+											<p:ajax event="blur"
+												listener="#{testeFisicoController.salvarFlutuacao(rt)}"
+												update="outputFlutuacao"></p:ajax>
+										</h:selectOneMenu>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+
+						</p:dataTable>
+
+					</p:tab>
+					<p:tab title="THE COTAR"
+						rendered="#{testeFisicoController.thecotar}">
+
+						<p:dataTable id="listaTheCotar" var="rt"
+							value="#{testeFisicoController.resultadosTheCotar}"
+							editable="true" editMode="cell" widgetVar="thecotar"
+							paginator="true"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="5,10,15">
+
+
+
+
+							<p:ajax event="cellEdit"
+								listener="#{testeFisicoController.onCellEditTheCotar}"
+								update=":form:msgs" />
+
+							<p:column headerText="Participante" colspan="3">
+
+
+								<h:outputText
+									value="#{testeFisicoController.participante(rt.pessoa)}" />
+
+
+							</p:column>
+
+							<p:column headerText="Natação 200m" style="text-align: center;">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{rt.natacao_200m}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText value="#{testeFisicoController.natacao_200m}"
+											style="width:96%" label="Year" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column headerText="Shutle Run" style="text-align: center;">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{rt.shutlerun}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText value="#{testeFisicoController.shutlerun}"
+											style="width:96%" label="Year" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column headerText="Corrida Sobrecarga"
+								style="text-align: center;">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{rt.corrida_50m_sobr}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText
+											value="#{testeFisicoController.corrida_sobrecarga}"
+											style="width:96%" label="Year" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+							<p:column headerText="Salto Plataforma"
+								style="text-align: center;">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{rt.salto_plataforma}" />
+									</f:facet>
+									<f:facet name="input">
+										<h:selectOneMenu
+											value="#{testeFisicoController.salto_plataforma}"
+											style="width:100%; color: black;">
+											<f:selectItem itemLabel="" />
+											<f:selectItems value="#{testeFisicoController.situacaoCotar}" />
+										</h:selectOneMenu>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+							<p:column headerText="Flutuação" style="text-align: center;">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{rt.flutuacao}" />
+									</f:facet>
+									<f:facet name="input">
+										<h:selectOneMenu
+											value="#{testeFisicoController.flutuacao_cotar}"
+											style="width:100%; color: black;">
+											<f:selectItem itemLabel="" />
+											<f:selectItems value="#{testeFisicoController.situacaoCotar}" />
+										</h:selectOneMenu>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+						</p:dataTable>
+						<p:contextMenu for="lista" widgetVar="cMenu">
+							<p:menuitem value="Edit Cell" icon="ui-icon-search"
+								onclick="PF('thecotar').showCellEditor();return false;" />
+							<p:menuitem value="Hide Menu" icon="ui-icon-close"
+								onclick="PF('cMenu').hide()" />
+						</p:contextMenu>
+					</p:tab>
+					<p:tab title="THE COTAM"
+						rendered="#{testeFisicoController.thecotam}">
+
+						<p:dataTable id="listaTheCotam" var="rt"
+							value="#{testeFisicoController.resultadosTaf}" editable="true"
+							editMode="cell" widgetVar="thecotam" paginator="true"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="5,10,15">
+
+
+							<f:facet name="header">Tabela de resultados do TAF</f:facet>
+
+							<p:ajax event="cellEdit"
+								listener="#{testeFisicoController.onCellEdit}"
+								update=":form:msgs" />
+
+							<p:column headerText="Participante" colspan="3">
+
+
+								<h:outputText
+									value="#{testeFisicoController.participante(rt.pessoa)}" />
+
+
+							</p:column>
+
+							<p:column headerText="Flexão Barra" style="text-align: center;">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{rt.flexao_barra}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText value="#{testeFisicoController.barra}"
+											style="width:96%" label="Year" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column headerText="Flexão Solo" style="text-align: center;">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{rt.flexao_solo}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText value="#{testeFisicoController.apoio}"
+											style="width:96%" label="Year" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column headerText="Abdominal" style="text-align: center;">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{rt.abdominal}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText value="#{testeFisicoController.abdominal}"
+											style="width:96%" label="Year" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+							<p:column headerText="Corrida 50m" style="text-align: center;">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{rt.corrida_50M}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText value="#{testeFisicoController.corrida50}"
+											style="width:96%" label="Year" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+							<p:column headerText="Corrida 12min" style="text-align: center;">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{rt.corrida_12MIN}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText value="#{testeFisicoController.corrida12}"
+											style="width:96%" label="Year" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+						</p:dataTable>
+						<p:contextMenu for="lista" widgetVar="cMenu">
+							<p:menuitem value="Edit Cell" icon="ui-icon-search"
+								onclick="PF('thecotam').showCellEditor();return false;" />
+							<p:menuitem value="Hide Menu" icon="ui-icon-close"
+								onclick="PF('cMenu').hide()" />
+						</p:contextMenu>
+					</p:tab>
+					<p:tab title="THE GATE" rendered="#{testeFisicoController.thegate}">
+
+						<p:dataTable id="listaTheGate" var="rt"
+							value="#{testeFisicoController.resultadosTaf}" editable="true"
+							editMode="cell" widgetVar="thegate" paginator="true"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="5,10,15">
+
+
+							<f:facet name="header">Tabela de resultados do TAF</f:facet>
+
+							<p:ajax event="cellEdit"
+								listener="#{testeFisicoController.onCellEdit}"
+								update=":form:msgs" />
+
+							<p:column headerText="Participante" colspan="3">
+
+
+								<h:outputText
+									value="#{testeFisicoController.participante(rt.pessoa)}" />
+
+
+							</p:column>
+
+							<p:column headerText="Flexão Barra" style="text-align: center;">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{rt.flexao_barra}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText value="#{testeFisicoController.barra}"
+											style="width:96%" label="Year" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column headerText="Flexão Solo" style="text-align: center;">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{rt.flexao_solo}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText value="#{testeFisicoController.apoio}"
+											style="width:96%" label="Year" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column headerText="Abdominal" style="text-align: center;">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{rt.abdominal}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText value="#{testeFisicoController.abdominal}"
+											style="width:96%" label="Year" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+							<p:column headerText="Corrida 50m" style="text-align: center;">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{rt.corrida_50M}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText value="#{testeFisicoController.corrida50}"
+											style="width:96%" label="Year" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+							<p:column headerText="Corrida 12min" style="text-align: center;">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{rt.corrida_12MIN}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText value="#{testeFisicoController.corrida12}"
+											style="width:96%" label="Year" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+						</p:dataTable>
+						<p:contextMenu for="lista" widgetVar="cMenu">
+							<p:menuitem value="Edit Cell" icon="ui-icon-search"
+								onclick="PF('thegate').showCellEditor();return false;" />
+							<p:menuitem value="Hide Menu" icon="ui-icon-close"
+								onclick="PF('cMenu').hide()" />
+						</p:contextMenu>
+					</p:tab>
+				</p:tabView>
+
+			</h:panelGroup>
+
+
+
+			<h:panelGroup id="botoes"
+				rendered="#{testeFisicoController.editando}">
+
+				<p:panelGrid columns="3" styleClass="ui-panelgrid-blank">
+					<b:commandButton action="#{testeFisicoController.cancelar()}"
+						value="Cancelar" immediate="true" look="primary">
+
+					</b:commandButton>
+					<b:commandButton action="#{testeFisicoController.salvar()}"
+						value="Salvar" look="primary">
+
+					</b:commandButton>
+
+
+
+					<b:commandButton action="#{testeFisicoController.continuar()}"
+						value="Próxima Etapa" look="primary">
+						<f:ajax execute=":form" render=":form" />
+					</b:commandButton>
+
+				</p:panelGrid>
+
+			</h:panelGroup>
+
+
+		</h:form>
+		
+	<script type="text/javascript" src="../resources/js/calendar_locale.js"></script>
+	<style type="text/css" ></style>
+	</ui:define>
+
+</ui:composition>
+

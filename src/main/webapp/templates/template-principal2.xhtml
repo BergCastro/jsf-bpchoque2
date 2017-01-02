@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+    <h:head>
+        <title><ui:insert name="tituloJanela" /></title>
+        <ui:insert name="css"></ui:insert>
+    </h:head>
+    <!-- Add 50px padding top to the body for the navbar -->
+    <h:body style="padding-top:60px; padding-botton:20px; padding-left:40px; padding-right:40px;">
+    	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+        <b:navBar brand="SysChoque" brandHref="#" inverse="true" fixed="top">
+           <b:navbarLinks>
+			<b:navLink value="Início" href="../home.xhtml"></b:navLink>
+			<b:dropMenu value="Manutenção">
+				<b:navLink value="Cargos" href="/Cargos"></b:navLink>
+				<b:navLink value="Pessoas" href="/Pessoas"></b:navLink>
+				<b:navLink value="Teste Físico" href="/TestesFisicos"></b:navLink>
+
+			</b:dropMenu>
+			<b:navLink value="Relatórios" href="#contact"></b:navLink>
+		</b:navbarLinks>
+            <h:form styleClass="navbar-form navbar-right" th:action="@{/login}">
+                <div class="form-group">
+                    <b:inputText id="username" placeholder="Email" fieldSize="sm"/>
+                    <!--input type="text" class="form-control" placeholder="Search"/-->
+                </div>
+                <div class="form-group">
+                    <b:inputText id="password" placeholder="Senha" fieldSize="sm"/>
+                </div> 
+                #{' '}
+                <b:commandButton action="a" value="Login" size="sm" look="primary" icon="chevron-right" iconAlign="right"/>
+            </h:form>
+        </b:navBar>
+        <b:jumbotron>
+            <b:container>
+                <ui:insert name="corpo-da-pagina"> Espaço para o conteúdo da tela </ui:insert>
+            </b:container>
+
+        </b:jumbotron>
+        <ui:insert name="js"></ui:insert>
+
+    </h:body>
+</html>

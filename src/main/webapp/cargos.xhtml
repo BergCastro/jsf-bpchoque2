@@ -1,0 +1,88 @@
+<ui:composition template="/templates/template-principal2.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui" xmlns:p="http://primefaces.org/ui">
+	<ui:define name="tituloJanela">Manutenção de Patentes</ui:define>
+	<ui:define name="corpo-da-pagina">
+		<h:form id="form">
+
+			<b:commandButton action="#{cargoController.novo()}" value="Novo"
+				look="primary" icon="glyphicon glyphicon-plus-sign"
+				rendered="#{!cargoController.editando}">
+				<f:ajax execute="@form" render="@form" />
+			</b:commandButton>
+			<br />
+			<br />
+			<h:panelGroup rendered="#{!cargoController.editando}">
+				<b:dataTable value="#{cargoController.cargos}" var="obj"
+					id="lista" frame="box" rules="all" cellpadding="3" lang="es" style="font-size: 0.90em;">
+
+
+					<h:column>
+						<f:facet name="header">ID</f:facet>
+						<h:outputText value="#{obj.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">NOME</f:facet>
+						<h:outputText value="#{obj.nome}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">ABREVIAÇÃO</f:facet>
+						<h:outputText value="#{obj.abreviacao}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">Alterar</f:facet>
+						<h:commandLink value="Alterar"
+							action="#{cargoController.alterar(obj)}">
+							<f:ajax render="@form" execute="@form" />
+						</h:commandLink>
+					</h:column>
+					<h:column>
+						<f:facet name="header">Excluir</f:facet>
+						<h:commandLink value="Excluir"
+							action="#{cargoController.excluir(obj)}"
+							onclick="if (!confirm('Confirme a exclusão da pessoa?')) return false">
+							<f:ajax execute="@form" render="@form" />
+						</h:commandLink>
+					</h:column>
+
+
+				</b:dataTable>
+
+			</h:panelGroup>
+			<h:panelGroup rendered="#{cargoController.editando}">
+				<b:panelGrid colSpans="1,5,6">
+					
+					
+						<h:outputLabel value="Nome" style="padding-top: 5px" />
+					
+						
+						<b:inputText value="#{cargoController.cargo.nome}" id="nome" span="10"/>
+					
+						<h:message for="nome" style="color: red" />
+					
+						<h:outputLabel value="Abreviação" style="padding-top: 5px"/>
+					
+						<b:inputText value="#{cargoController.cargo.abreviacao}"
+							id="abreviacao" span="8"/>
+					
+						<h:message for="abreviacao" style="color: red" />
+					
+					<b:commandButton action="#{cargoController.cancelar()}"
+						value="Cancelar" immediate="true" look="primary" >
+						<f:ajax execute="@form" render="@form" />
+					</b:commandButton>
+					
+					<b:commandButton action="#{cargoController.salvar()}"
+						value="Salvar" look="primary" >
+						<f:ajax execute="@form" render="@form" />
+					</b:commandButton>
+					
+				</b:panelGrid>
+			</h:panelGroup>
+		</h:form>
+	</ui:define>
+</ui:composition>
+

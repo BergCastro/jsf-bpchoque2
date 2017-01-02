@@ -1,0 +1,257 @@
+
+
+
+<p:tabView rendered="#{militarController.editandoMilitar}">
+				<p:messages></p:messages>
+				<p:tab title="Dados Pessoais">
+					<p:panelGrid columns="3" styleClass="ui-panelgrid-blank">
+						<p:outputLabel value="Nome:" />
+						<p:inputText value="#{militarController.militar.nome}" id="nome"
+							size="60" style="text-transform: uppercase" converter="#{toUpperCaseConverter}" >
+							
+						</p:inputText>
+						
+						<p:message for="nome" />
+
+						<p:outputLabel value="CPF:" />
+						<p:inputMask value="#{militarController.militar.cpf}" id="cpf"
+							size="40" mask="999.999.999-99"  />
+						<p:message for="cpf" />
+
+						<p:outputLabel value="Data Nascimento:" />
+						<p:calendar id="datanasc"
+						value="#{militarController.militar.datanasc}"
+						pattern="dd/MM/yyyy" mask="true" converter="#{localDateConverter2}" locale="pt"/>
+
+						<p:message for="datanasc" />
+
+						<p:outputLabel value="Estado Civil:" />
+						<h:selectOneMenu value="#{militarController.militar.estado_civil}"
+							id="estadoCivil">
+							<f:selectItem itemLabel=".:Selecione uma opção:." />
+							<f:selectItems value="#{militarController.estadoCivil}" />
+						</h:selectOneMenu>
+						<p:message for="estadoCivil" />
+
+						<p:outputLabel value="Sexo:" />
+						<h:panelGrid columns="2" style="margin-bottom:10px"
+							cellpadding="5" cellspacing="10">
+							<p:selectOneRadio id="sexo" columns="2"
+								value="#{militarController.militar.sexo}">
+								<f:selectItems value="#{militarController.sexos}" />
+							</p:selectOneRadio>
+						</h:panelGrid>
+						<p:message for="sexo" />
+
+						<p:outputLabel value="Foto:" />
+						<p:fileUpload value="#{militarController.militar.foto}"
+							fileUploadListener="#{pessoaController.carregarArquivo}"
+							mode="advanced" dragDropSupport="false" update="imagem"
+							sizeLimit="100000" fileLimit="1"
+							allowTypes="/(\.|\/)(gif|jpe?g|png)$/" id="foto">
+
+						</p:fileUpload>
+
+						<p:growl id="messages" showDetail="true" />
+						<h:panelGroup id="imagem">
+							<p:graphicImage value="#{militarController.militar.foto}" />
+						</h:panelGroup>
+
+					</p:panelGrid>
+				</p:tab>
+
+
+				<p:tab title="Dados Militares">
+					<h:panelGroup id="isInterno">
+						<p:panelGrid columns="3" styleClass="ui-panelgrid-blank">
+
+							<p:outputLabel for="pertenceBtl"
+								value="Pertence a este Batalhão:" />
+							<p:selectOneRadio id="pertenceBtl"
+								value="#{militarController.pertenceBtl}">
+								<f:selectItem itemLabel="Sim" itemValue="true" />
+								<f:selectItem itemLabel="Não" itemValue="false" />
+								<f:ajax execute="" render="isInterno" />
+							</p:selectOneRadio>
+							<br />
+
+							<p:outputLabel value="Matrícula:" />
+							<p:inputMask mask="999999-9-9" value="#{militarController.militar.matricula}"
+								id="matricula" />
+							<p:message for="matricula" />
+
+
+							<p:outputLabel value="Posto/Grad.:" />
+
+							<p:selectOneMenu id="cargocombo"
+								value="#{militarController.militar.cargo}" span="8"
+								converter="#{converterPatente}">
+								<f:selectItem noSelectionOption="true" itemValue=""
+									itemLabel="Não Informado" />
+								<f:selectItems value="#{cargoController.cargos}" var="p"
+									itemLabel="#{p.nome}" itemValue="#{p}" />
+							</p:selectOneMenu>
+
+							<p:message for="cargocombo" />
+
+							<p:outputLabel value="Número PM:" />
+							<p:inputText value="#{militarController.militar.numero_pm}"
+								id="numeroPm" size="20" />
+							<p:message for="numeroPm" />
+
+
+
+
+							<p:outputLabel value="Nome de Guerra:" />
+							<p:inputText value="#{militarController.militar.nome_guerra}"
+								id="nome_guerra" size="25" style="text-transform: uppercase" converter="#{toUpperCaseConverter}"/>
+							<p:message for="nome_guerra" />
+
+
+							<p:outputLabel value="OPM:"
+								rendered="#{!militarController.pertenceBtl}" />
+							<p:inputText value="#{militarController.militar.opm}" id="opm2"
+								size="25" rendered="#{!militarController.pertenceBtl}"
+								style="text-transform: uppercase" converter="#{toUpperCaseConverter}" />
+							<p:message for="opm2"
+								rendered="#{!militarController.pertenceBtl}" />
+
+							<p:outputLabel value="Companhia:"
+								rendered="#{militarController.pertenceBtl}" />
+							<p:selectOneMenu id="ciascombo" value="#{militarController.militar.cia}"
+								converter="#{companhiaConverter}"
+								rendered="#{militarController.pertenceBtl}">
+								<p:ajax event="change" process="@this" update="gruposcombo" />
+
+								<f:selectItem itemLabel="Não Informado" itemValue=""
+									noSelectionOption="true" />
+								<f:selectItems value="#{militarController.cias}" var="c"
+									itemLabel="#{c.nome}" itemValue="#{c}" />
+
+							</p:selectOneMenu>
+
+							<p:message for="ciascombo"
+								rendered="#{militarController.pertenceBtl}" />
+
+							<p:outputLabel value="Grupo:"
+								rendered="#{militarController.pertenceBtl}" />
+
+
+							<p:selectOneMenu id="gruposcombo"
+								value="#{militarController.militar.grupo}"
+								converter="#{grupoConverter}"
+								rendered="#{militarController.pertenceBtl}">
+								<f:selectItem itemLabel="Não Informado" />
+								<f:selectItems value="#{militarController.grupos}" var="g"
+									itemLabel="#{g.nome}" itemValue="#{g}" />
+
+							</p:selectOneMenu>
+							<p:message for="gruposcombo"
+								rendered="#{militarController.pertenceBtl}" />
+
+						</p:panelGrid>
+					</h:panelGroup>
+				</p:tab>
+				<p:tab title="Endereço">
+
+
+
+					<p:panelGrid columns="3" styleClass="ui-panelgrid-blank">
+
+						<p:outputLabel value="Logradouro:" />
+						<p:inputText value="#{militarController.militar.logradouro}"
+							id="logradouro" size="40" style="text-transform: uppercase" converter="#{toUpperCaseConverter}"/>
+						<p:message for="logradouro" />
+
+						<p:outputLabel value="Número:" />
+						<p:inputText value="#{militarController.militar.numero}"
+							id="numero" size="20" />
+						<p:message for="numero" />
+
+						<p:outputLabel value="Complemento:" />
+						<p:inputText value="#{militarController.militar.complemento}"
+							id="complemento" size="40" style="text-transform: uppercase" converter="#{toUpperCaseConverter}"/>
+						<p:message for="complemento" />
+
+						<p:outputLabel value="Estado:" />
+						<p:selectOneMenu id="estado" value="#{cidadeController.estado}"
+						converter="#{estadoConverter}">
+							<p:ajax event="change" process="@this" update="cidade"
+								 />
+							<f:selectItem itemLabel=".:Selecione:." itemValue="" noSelectionOption="true"/>
+							<f:selectItems value="#{estadoController.estados}" var="e"
+								itemLabel="#{e.nome}" itemValue="#{e}" />
+						</p:selectOneMenu>
+						<p:message for="estado" />
+
+
+						<p:outputLabel value="Cidade:" for="cidade" />
+						<p:selectOneMenu id="cidade" value="#{bairroController.cidade}"
+						converter="#{cidadeConverter}">
+						<p:ajax event="change" process="@this" update="bairro" />
+							<f:selectItem itemLabel=".:Selecione:." />
+							<f:selectItems value="#{cidadeController.cidadesByEstado}" var="c"
+								itemLabel="#{c.nome}" itemValue="#{c}" />
+						</p:selectOneMenu>
+						<p:message for="cidade" /> 
+						
+						
+						<p:outputLabel value="Bairro:" for="bairro" />
+						<p:selectOneMenu id="bairro" value="#{militarController.militar.bairro}"
+						converter="#{bairroConverter}">
+							<f:selectItem itemLabel=".:Selecione:." itemValue=""
+									noSelectionOption="true" />
+							<f:selectItems value="#{bairroController.bairrosByCidade}" var="b"
+								itemLabel="#{b.nome}" itemValue="#{b}" />
+						</p:selectOneMenu>
+						<p:message for="bairro" /> 
+						
+						<p:outputLabel value="CEP:" />
+						<p:inputMask id="cep"
+							value="#{militarController.militar.cep}" mask="99999-999"
+							 />
+
+						<p:message for="cep" />
+						
+						
+					</p:panelGrid>
+				</p:tab>
+				<p:tab title="Contato">
+					<p:panelGrid columns="3" styleClass="ui-panelgrid-blank">
+						<p:outputLabel value="Email:" />
+						<p:inputText value="#{militarController.militar.email}" id="email"
+							size="60" style="text-transform: lowercase" converter="#{toLowerCaseConverter}"/>
+						<p:message for="email" />
+						<p:outputLabel value="Celular1:" />
+						<p:inputMask value="#{militarController.militar.telefone1}" id="celular1"
+							size="25" mask="(99)99999-9999" />
+						<p:message for="celular1" />
+						<p:outputLabel value="Celular2:" />
+						<p:inputMask value="#{militarController.militar.telefone2}" id="celular2"
+							size="25" mask="(99)*9999-9999" />
+						<p:message for="celular2" />
+											
+					</p:panelGrid>
+						
+					
+				</p:tab>
+				
+			</p:tabView>
+			<h:panelGroup rendered="#{militarController.editandoMilitar}">
+				<p:panelGrid columns="3" styleClass="ui-panelgrid-blank">
+					<b:commandButton action="#{militarController.cancelar()}"
+						value="Cancelar" immediate="true" look="primary">
+						<f:ajax execute="@form" render="@form" />
+					</b:commandButton>
+
+					<b:commandButton action="#{militarController.salvar()}"
+						value="Salvar" look="primary">
+						<f:ajax execute="@form" render="@form" />
+					</b:commandButton>
+
+				</p:panelGrid>
+			</h:panelGroup>
+
+
+		</h:form>
+		

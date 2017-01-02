@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2016-10-22T20:35:05 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="testesfisicos" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="774758f2-021b-4c96-860a-b2ada1dcde08">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="bpchoque"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT bpchoque_db.teste_fisico.objetivo,
+	bpchoque_db.teste_fisico.status,
+	bpchoque_db.teste_fisico.tipo
+FROM bpchoque_db.teste_fisico]]>
+	</queryString>
+	<field name="objetivo" class="java.lang.String"/>
+	<field name="status" class="java.lang.String"/>
+	<field name="tipo" class="java.lang.String"/>
+	<field name="id" class="java.lang.Long"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="93" splitType="Stretch">
+			<image hAlign="Center">
+				<reportElement x="0" y="0" width="100" height="93" uuid="690e1eb2-6ac7-4199-b765-c159aa7aaec3"/>
+				<imageExpression><![CDATA["reports/imagens/logo-choque.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="113" y="17" width="325" height="70" uuid="6174282c-28f2-479f-a1d8-e305986ef5e8"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Estado do Ceará
+Secretaria de Segurança Pública e Defesa Social - SSPDS
+Polícia Militar do Ceará
+Batalhão de Polícia de Choque
+Departamento de Educação Fisica -DEF]]></text>
+			</staticText>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement x="460" y="0" width="84" height="91" uuid="43137fae-3379-46bc-ab71-5e1bbdca4291"/>
+				<imageExpression><![CDATA["reports/imagens/logo-def.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="31" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="550" height="30" uuid="95bf307a-6ac1-4adc-9624-495379b33a4b"/>
+				<textElement textAlignment="Center">
+					<font size="18"/>
+				</textElement>
+				<text><![CDATA[Relação de Testes Físicos]]></text>
+			</staticText>
+			<line>
+				<reportElement x="3" y="30" width="549" height="1" uuid="a90f301b-642b-4400-bbcc-b051fa3ee6eb"/>
+			</line>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="23" splitType="Stretch">
+			<staticText>
+				<reportElement x="140" y="-1" width="167" height="21" uuid="1643b3e4-0871-42d8-85fe-b48e353480b0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<text><![CDATA[Objetivo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="307" y="0" width="123" height="20" uuid="74793255-c1b1-44fb-8a2c-92c384f60ca1"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<text><![CDATA[status]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="430" y="-1" width="120" height="21" uuid="7dfdeb55-4e5f-473b-a9d9-8bc6795be595"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<text><![CDATA[tipo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="0" width="25" height="20" uuid="ce34573f-f215-468b-b381-bc9be90f3f4b"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<text><![CDATA[id]]></text>
+			</staticText>
+			<line>
+				<reportElement x="3" y="22" width="549" height="1" uuid="bd9495d6-fc77-4f0a-9836-7579f5b82661"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="140" y="0" width="167" height="20" uuid="1bf65169-b1ef-4916-9897-392177b6af36"/>
+				<textFieldExpression><![CDATA[$F{objetivo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="10" y="-1" width="27" height="20" uuid="799e6d6c-81c5-4276-aa5e-2541c1e6acaf"/>
+				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

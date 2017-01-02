@@ -1,0 +1,88 @@
+<ui:composition template="/templates/template-principal.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui" xmlns:p="http://primefaces.org/ui">
+	<ui:define name="tituloJanela">Manutenção de Patentes</ui:define>
+	<ui:define name="corpo-da-pagina">
+		<h:form id="form">
+
+			<b:commandButton action="#{patenteController.novo()}" value="Novo"
+				look="primary" icon="glyphicon glyphicon-plus-sign"
+				rendered="#{!patenteController.editando}">
+				<f:ajax execute="@form" render="@form" />
+			</b:commandButton>
+			<br />
+			<br />
+			<h:panelGroup rendered="#{!patenteController.editando}">
+				<b:dataTable value="#{patenteController.patentes}" var="obj"
+					id="lista" frame="box" rules="all" cellpadding="3" lang="es">
+
+
+					<h:column>
+						<f:facet name="header">ID</f:facet>
+						<h:outputText value="#{obj.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">NOME</f:facet>
+						<h:outputText value="#{obj.nome}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">ABREVIAÇÃO</f:facet>
+						<h:outputText value="#{obj.abreviacao}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">Alterar</f:facet>
+						<h:commandLink value="Alterar"
+							action="#{patenteController.alterar(obj)}">
+							<f:ajax render="@form" execute="@form" />
+						</h:commandLink>
+					</h:column>
+					<h:column>
+						<f:facet name="header">Excluir</f:facet>
+						<h:commandLink value="Excluir"
+							action="#{patenteController.excluir(obj)}"
+							onclick="if (!confirm('Confirme a exclusão da pessoa?')) return false">
+							<f:ajax execute="@form" render="@form" />
+						</h:commandLink>
+					</h:column>
+
+
+				</b:dataTable>
+
+			</h:panelGroup>
+			<h:panelGroup rendered="#{patenteController.editando}">
+				<b:panelGrid columns="3" colSpans="1,2,9">
+
+
+					<h:outputLabel value="Nome" />
+					<h:inputText value="#{patenteController.patente.nome}" id="nome" />
+					<h:message for="nome" style="color: red" />
+
+					<h:outputLabel value="" />
+					<h:outputLabel value="" />
+					<h:outputLabel value="" />
+
+					<h:outputLabel value="Abreviação" />
+					<h:inputText value="#{patenteController.patente.abreviacao}"
+						id="abreviacao" />
+					<h:message for="abreviacao" style="color: red" />
+					<h:outputLabel value="" />
+					<h:outputLabel value="" />
+					<h:outputLabel value="" />
+
+					<b:commandButton action="#{patenteController.cancelar()}"
+						value="Cancelar" immediate="true" look="primary">
+						<f:ajax execute="@form" render="@form" />
+					</b:commandButton>
+					<b:commandButton action="#{patenteController.salvar()}"
+						value="Salvar" look="primary">
+						<f:ajax execute="@form" render="@form" />
+					</b:commandButton>
+				</b:panelGrid>
+			</h:panelGroup>
+		</h:form>
+	</ui:define>
+</ui:composition>
+

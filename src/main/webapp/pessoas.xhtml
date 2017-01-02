@@ -1,0 +1,215 @@
+<ui:composition template="/templates/template-principal2.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui" xmlns:p="http://primefaces.org/ui">
+	<ui:define name="tituloJanela">Manutenção de Pessoas</ui:define>
+	<ui:define name="js">
+
+		
+
+	</ui:define>
+	<ui:define name="corpo-da-pagina">
+
+
+
+		<h:form id="form" prependId="false">
+			<h:panelGroup rendered="#{!pessoaController.editandoPessoa}">
+
+				<b:commandButton action="#{pessoaController.novoPessoa()}"
+					value="Novo" look="primary" icon="glyphicon glyphicon-plus-sign"
+					rendered="#{!pessoaController.editandoPessoa}">
+					<f:ajax execute="@form" render="@form" />
+				</b:commandButton>
+				<br />
+				<br />
+
+				<b:dataTable value="#{pessoaController.pessoas}" var="m"
+					id="lista" frame="box" rules="all" cellpadding="3" lang="es"   style="font-size: 0.90em;">
+
+
+					<h:column>
+						<f:facet name="header">ID</f:facet>
+						<h:outputText value="#{m.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">Matrícula</f:facet>
+						<h:outputText value="#{m.matricula}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">Numeral</f:facet>
+						<h:outputText value="#{m.numero_pm}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">Posto/Graduação</f:facet>
+						<h:outputText value="#{m.cargo}" converter="#{cargoConverter}"/>
+					</h:column>
+					<h:column>
+						<f:facet name="header">Nome de Guerra</f:facet>
+						<h:outputText value="#{m.nome_guerra}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">Alterar</f:facet>
+						<h:commandLink value="Alterar"
+							action="#{pessoaController.alterar(m)}">
+							<f:ajax render="@form" execute="@form" />
+						</h:commandLink>
+					</h:column>
+					<h:column>
+						<f:facet name="header">Excluir</f:facet>
+						<h:commandLink value="Excluir"
+							action="#{pessoaController.excluirPessoa(m)}"
+							onclick="if (!confirm('Confirme a exclusão da pessoa?')) return false">
+							<f:ajax execute="@form" render="@form" />
+						</h:commandLink>
+					</h:column>
+
+
+				</b:dataTable>
+
+			</h:panelGroup>
+
+			<p:tabView rendered="#{pessoaController.editandoPessoa}">
+				<p:messages></p:messages>
+				<p:tab title="Dados Pessoais">
+					<p:panelGrid columns="3" styleClass="ui-panelgrid-blank">
+						<p:outputLabel value="Nome:" />
+						<p:inputText value="#{pessoaController.pessoa.nome}" id="nome"
+							size="60" style="text-transform: uppercase" converter="#{toUpperCaseConverter}" >
+							
+						</p:inputText>
+						
+						<p:message for="nome" />
+
+						
+
+						<p:outputLabel value="Data Nascimento:" />
+						<p:calendar id="datanasc"
+						value="#{pessoaController.pessoa.datanasc}"
+						pattern="dd/MM/yyyy" mask="true" converter="#{localDateConverter2}" locale="pt"/>
+
+						<p:message for="datanasc" />
+
+						<p:outputLabel value="Estado Civil:" />
+						<h:selectOneMenu value="#{pessoaController.pessoa.estado_civil}"
+							id="estadoCivil">
+							<f:selectItem itemLabel=".:Selecione uma opção:." />
+							<f:selectItems value="#{pessoaController.estadoCivil}" />
+						</h:selectOneMenu>
+						<p:message for="estadoCivil" />
+
+						<p:outputLabel value="Sexo:" />
+						<h:panelGrid columns="2" style="margin-bottom:10px"
+							cellpadding="5" cellspacing="10">
+							<p:selectOneRadio id="sexo" columns="2"
+								value="#{pessoaController.pessoa.sexo}">
+								<f:selectItems value="#{pessoaController.sexos}" />
+							</p:selectOneRadio>
+						</h:panelGrid>
+						<p:message for="sexo" />
+
+						<p:outputLabel value="Foto:" />
+						<p:fileUpload value="#{pessoaController.pessoa.foto}"
+							fileUploadListener="#{pessoaController.carregarArquivo}"
+							mode="advanced" dragDropSupport="false" update="imagem"
+							sizeLimit="100000" fileLimit="1"
+							allowTypes="/(\.|\/)(gif|jpe?g|png)$/" id="foto">
+
+						</p:fileUpload>
+
+						<p:growl id="messages" showDetail="true" />
+						<h:panelGroup id="imagem">
+							<p:graphicImage value="#{pessoaController.pessoa.foto}" />
+						</h:panelGroup>
+
+					</p:panelGrid>
+				</p:tab>
+
+
+				<p:tab title="Dados Militares">
+					<h:panelGroup id="isInterno">
+						<p:panelGrid columns="3" styleClass="ui-panelgrid-blank">
+
+							<p:outputLabel for="pertenceBtl"
+								value="Pertence a este Batalhão:" />
+							<p:selectOneRadio id="pertenceBtl"
+								value="#{pessoaController.pertenceBtl}">
+								<f:selectItem itemLabel="Sim" itemValue="true" />
+								<f:selectItem itemLabel="Não" itemValue="false" />
+								<f:ajax execute="" render="isInterno" />
+							</p:selectOneRadio>
+							<br />
+
+							<p:outputLabel value="Matrícula:" />
+							<p:inputMask mask="999999-9-*" value="#{pessoaController.pessoa.matricula}"
+								id="matricula" />
+							<p:message for="matricula" />
+
+
+							<p:outputLabel value="Posto/Grad.:" />
+
+							<p:selectOneMenu id="cargocombo"
+								value="#{pessoaController.pessoa.cargo}" span="8"
+								converter="#{converterPatente}">
+								<f:selectItem noSelectionOption="true" itemValue=""
+									itemLabel="Não Informado" />
+								<f:selectItems value="#{cargoController.cargos}" var="p"
+									itemLabel="#{p.nome}" itemValue="#{p}" />
+							</p:selectOneMenu>
+
+							<p:message for="cargocombo" />
+
+							<p:outputLabel value="Número PM:" />
+							<p:inputText value="#{pessoaController.pessoa.numero_pm}"
+								id="numeroPm" size="20" />
+							<p:message for="numeroPm" />
+
+
+
+
+							<p:outputLabel value="Nome de Guerra:" />
+							<p:inputText value="#{pessoaController.pessoa.nome_guerra}"
+								id="nome_guerra" size="25" style="text-transform: uppercase" converter="#{toUpperCaseConverter}"/>
+							<p:message for="nome_guerra" />
+
+
+							<p:outputLabel value="OPM:"
+								/>
+							<p:inputText value="#{pessoaController.pessoa.opm}" id="opm2"
+								size="25" 
+								style="text-transform: uppercase" converter="#{toUpperCaseConverter}" />
+							<p:message for="opm2"
+								 />
+
+							
+
+							
+						</p:panelGrid>
+					</h:panelGroup>
+				</p:tab>
+				
+				
+				
+			</p:tabView>
+			<h:panelGroup rendered="#{pessoaController.editandoPessoa}">
+				<p:panelGrid columns="3" styleClass="ui-panelgrid-blank">
+					<b:commandButton action="#{pessoaController.cancelar()}"
+						value="Cancelar" immediate="true" look="primary">
+						<f:ajax execute="@form" render="@form" />
+					</b:commandButton>
+
+					<b:commandButton action="#{pessoaController.salvar()}"
+						value="Salvar" look="primary">
+						<f:ajax execute="@form" render="@form" />
+					</b:commandButton>
+
+				</p:panelGrid>
+			</h:panelGroup>
+
+
+		</h:form>
+		<script type="text/javascript" src="../resources/js/calendar_locale.js"></script>
+	</ui:define>
+</ui:composition>
+
