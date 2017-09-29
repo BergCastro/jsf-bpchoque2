@@ -1,5 +1,7 @@
 package br.com.fireware.bpchoque.controller.def;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -1112,15 +1114,17 @@ public class TesteFisicoController {
 	
 
 	public void salvarBarra(ResultadoTAF resultado) {
+		
 		if (getBarra() != null) {
 			resultado.setFlexao_barra(getBarra());
 			resultado.setFlexao_barra_pts(resultadoTafService.findNota("FLEXAO_BARRA",
 					Pessoa.idadeAvaliacao(resultado.getPessoa().getDatanasc()), getBarra(), "MASCULINO"));
 			// resultadoTafService.save(resultado);
-
-			resultado.setPontuacao_total(((double) resultado.getFlexao_barra_pts()
+			Double result = ((double) resultado.getFlexao_barra_pts()
 					+ (double) resultado.getFlexao_solo_pts() + (double) resultado.getAbdominal_pts()
-					+ (double) resultado.getCorrida_50m_pts() + (double) resultado.getCorrida_12min_pts()) / 40);
+					+ (double) resultado.getCorrida_50m_pts() + (double) resultado.getCorrida_12min_pts()) / 30;
+			
+			resultado.setPontuacao_total(result);
 
 			
 			resultadoTafService.save(resultado);
@@ -1144,7 +1148,7 @@ public class TesteFisicoController {
 			}
 			resultado.setPontuacao_total(((double) resultado.getFlexao_barra_pts()
 					+ (double) resultado.getFlexao_solo_pts() + (double) resultado.getAbdominal_pts()
-					+ (double) resultado.getCorrida_50m_pts() + (double) resultado.getCorrida_12min_pts()) / 40);
+					+ (double) resultado.getCorrida_50m_pts() + (double) resultado.getCorrida_12min_pts()) / 30);
 			resultadoTafService.save(resultado);
 			
 		}
@@ -1163,7 +1167,7 @@ public class TesteFisicoController {
 			
 			resultado.setPontuacao_total(((double) resultado.getFlexao_barra_pts()
 					+ (double) resultado.getFlexao_solo_pts() + (double) resultado.getAbdominal_pts()
-					+ (double) resultado.getCorrida_50m_pts() + (double) resultado.getCorrida_12min_pts()) / 40);
+					+ (double) resultado.getCorrida_50m_pts() + (double) resultado.getCorrida_12min_pts()) / 30);
 			
 			
 			resultadoTafService.save(resultado);
@@ -1179,7 +1183,7 @@ public class TesteFisicoController {
 					Pessoa.idadeAvaliacao(resultado.getPessoa().getDatanasc()), getCorrida50(), resultado.getPessoa().getSexo().toString()));
 			resultado.setPontuacao_total(((double) resultado.getFlexao_barra_pts()
 					+ (double) resultado.getFlexao_solo_pts() + (double) resultado.getAbdominal_pts()
-					+ (double) resultado.getCorrida_50m_pts() + (double) resultado.getCorrida_12min_pts()) / 40);
+					+ (double) resultado.getCorrida_50m_pts() + (double) resultado.getCorrida_12min_pts()) / 30);
 
 			
 			resultadoTafService.save(resultado);
@@ -1194,7 +1198,7 @@ public class TesteFisicoController {
 					Pessoa.idadeAvaliacao(resultado.getPessoa().getDatanasc()), getCorrida12(), resultado.getPessoa().getSexo().toString()));
 			resultado.setPontuacao_total(((double) resultado.getFlexao_barra_pts()
 					+ (double) resultado.getFlexao_solo_pts() + (double) resultado.getAbdominal_pts()
-					+ (double) resultado.getCorrida_50m_pts() + (double) resultado.getCorrida_12min_pts()) / 40);
+					+ (double) resultado.getCorrida_50m_pts() + (double) resultado.getCorrida_12min_pts()) / 30);
 
 			
 			resultadoTafService.save(resultado);
